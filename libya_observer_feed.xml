@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Libya Observer RSS Feed</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .rss-item {
+            margin: 10px 0;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .rss-item a {
+            font-weight: bold;
+            color: #007BFF;
+            text-decoration: none;
+        }
+        .rss-item a:hover {
+            text-decoration: underline;
+        }
+        .rss-item p {
+            margin: 5px 0;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>Libya Observer News Feed</h1>
+    <div id="rss-feed">Loading...</div>
+
+    <!-- JavaScript goes here -->
+    <script>
+ 
+
