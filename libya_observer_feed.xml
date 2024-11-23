@@ -29,7 +29,39 @@
     <h1>Libya Observer News Feed</h1>
     <div id="rss-feed">Loading...</div>
 
-    <!-- JavaScript goes here -->
     <script>
- 
+        async function fetchRSSFeed() {
+            try {
+                const proxy = "https://cors-anywhere.herokuapp.com/"; // Free CORS proxy
+                const url = "https://orrink89.github.io/rss-widget/libya_observer_feed.xml"; // Replace with your RSS feed URL
+                const response = await fetch(proxy + url);
 
+                const text = await response.text();
+                const parser = new DOMParser();
+                const xml = parser.parseFromString(text, "text/xml");
+
+                const items = xml.querySelectorAll("item");
+                const container = document.getElementById("rss-feed");
+
+                container.innerHTML = Array.from(items)
+                    .map(item => {
+                        const title = item.querySelector("title").textContent;
+                        const link = item.querySelector("link").textContent;
+                        const description = item.querySelector("description").textContent;
+
+                        return `<div class="rss-item">
+                                    <a href="${link}" target="_blank">${title}</a>
+                                    <p>${description}</p>
+                                </div>`;
+                    })
+                    .join("");
+            } catch (error) {
+                document.getElementById("rss-feed").textContent = "Failed to load RSS feed.";
+                console.error("Error fetching RSS feed:", error);
+            }
+        }
+
+        fetchRSSFeed();
+    </script>
+</body>
+</html>
