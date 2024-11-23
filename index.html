@@ -1,25 +1,73 @@
-const feeds = [
-    { url: "https://libyaobserver.ly/news", title: "Libya Observer" },
-    { url: "https://www.aljazeera.com/xml/rss/all.xml", title: "Al Jazeera" }
-];
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RSS Feeds</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+        .rss-feed {
+            margin-bottom: 20px;
+        }
+        .rss-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .rss-item a {
+            font-size: 16px;
+            color: #007BFF;
+            text-decoration: none;
+        }
+        .rss-item a:hover {
+            text-decoration: underline;
+        }
+        .rss-item p {
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>RSS Feeds</h1>
+    <script>
+        const feeds = [
+            { url: "https://libyaobserver.ly/news", title: "Libya Observer" },
+            { url: "https://www.aljazeera.com/xml/rss/all.xml", title: "Al Jazeera" }
+        ];
 
-feeds.forEach(feed => {
-    document.body.innerHTML += `<h2>${feed.title}</h2><div id="${feed.title.replace(/ /g, '-')}" class="rss-feed">Loading...</div>`;
+        feeds.forEach(feed => {
+            document.body.innerHTML += `
+                <div class="rss-feed">
+                    <h2>${feed.title}</h2>
+                    <div id="${feed.title.replace(/ /g, '-')}">Loading...</div>
+                </div>
+            `;
+            fetchRSSFeed(feed.url, feed.title.replace(/ /g, '-'));
+        });
 
-    fetchRSSFeed(feed.url, feed.title.replace(/ /g, '-'));
-});
+        async function fetchRSSFeed(url, containerId) {
+            const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${url}`);
+            const data = await response.json();
 
-async function fetchRSSFeed(url, containerId) {
-    const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${url}`);
-    const data = await response.json();
+            const feedContainer = document.getElementById(containerId);
+            feedContainer.innerHTML = data.items
+                .map(item => `
+                    <div class="rss-item">
+                        <a href="${item.link}" target="_blank">${item.title}</a>
+                        <p>${item.pubDate}</p>
+                    </div>
+                `)
+                .join("");
+        }
+    </script>
+</body>
+</html>
 
-    const feedContainer = document.getElementById(containerId);
-    feedContainer.innerHTML = data.items
-        .map(item => `
-            <div class="rss-item">
-                <a href="${item.link}" target="_blank">${item.title}</a>
-                <p>${item.pubDate}</p>
-            </div>
-        `)
-        .join("");
 }
